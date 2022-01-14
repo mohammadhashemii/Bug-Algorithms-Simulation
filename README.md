@@ -13,5 +13,5 @@ The Bug algorithm is perhaps the simplest obstacle-avoidance algorithm one could
 
 You can see the behavior of simple Bug Algorithms here:
 <p align="center">
-  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug-algorithms.jpg" width="200" height="200">	
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug-algorithms.jpg" height="200">	
 </p>
