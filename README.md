@@ -30,6 +30,12 @@ If your are just interested in controllers, there are three distinct Python file
 
 ## Simulation
 The simulation results in Webots are as follows. Also you can watch the full videos of the simulations here: [Simulation Videos](https://drive.google.com/drive/folders/13nMh-HdsPXXpsJykysohrLSxVexHf-t3?usp=sharing)
+<p align="center">
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/map.jpg" height="500">	
+</p>
+
+### Bug 0 snapshots:
+
 
 ## How to run
 For simulation, you need to install [Webots](https://cyberbotics.com) software on your system. After installing Webots:
