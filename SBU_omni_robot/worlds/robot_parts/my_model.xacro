@@ -1,0 +1,454 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="rob_scale" value="0.225"/>
+  <xacro:property name="camera_z" value="${rob_scale}"/>
+  <xacro:property name="base_z" value="${rob_scale*0.52}"/>
+
+
+  <xacro:property name="right_wheel_x" value="${rob_scale*2.195}"/>
+  <xacro:property name="right_wheel_y" value="${rob_scale*0}"/>
+  <xacro:property name="right_wheel_z" value="${rob_scale*0.27}"/>
+
+  <xacro:property name="right_wheel_length" value="${rob_scale*0.07}"/>
+  <xacro:property name="right_wheel_radius" value="${rob_scale*0.27}"/>
+  <xacro:property name="right_wheel_mass" value="${rob_scale*40}"/>
+
+
+
+
+  <xacro:property name="left_wheel_x" value="${rob_scale*-1.10000}"/>
+  <xacro:property name="left_wheel_y" value="${rob_scale*-1.9}"/>
+  <xacro:property name="left_wheel_z" value="${rob_scale*0.27}"/>
+
+  <xacro:property name="left_wheel_length" value="${rob_scale*0.07}"/>
+  <xacro:property name="left_wheel_radius" value="${rob_scale*0.27}"/>
+  <xacro:property name="left_wheel_mass" value="${rob_scale*40}"/>
+
+
+
+  <xacro:property name="left2_wheel_x" value="${rob_scale*-1.10000}"/>
+  <xacro:property name="left2_wheel_y" value="${rob_scale*1.9}"/>
+  <xacro:property name="left2_wheel_z" value="${rob_scale*0.27}"/>
+
+  <xacro:property name="left2_wheel_length" value="${rob_scale*0.07}"/>
+  <xacro:property name="left2_wheel_radius" value="${rob_scale*0.27}"/>
+  <xacro:property name="left2_wheel_mass" value="${rob_scale*40}"/>
+
+  <xacro:property name="sensor_size" value="${rob_scale*0.1}"/>
+
+
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.203125 0.23828125 0.28515625 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
+  </material>
+  <material name="brown">
+    <color rgba="0.870588235294 0.811764705882 0.764705882353 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.80078125 0.12890625 0.1328125 1.0"/>
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <gazebo reference="link_chassis">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="link_left_wheel">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="link_right_wheel">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="link_left2_wheel">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="camera_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="sonar_link_1">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="sonar_link_2">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="sonar_link_3">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/robot</robotNamespace>
+    </plugin>
+  </gazebo>
+
+
+
+  <xacro:macro name="surface_gen" params="main_link_name">
+    <gazebo reference="${main_link_name}">
+      <mu1>5000.0</mu1>
+      <mu2>0</mu2>
+      <fdir1>1 0 0</fdir1>
+      <maxContacts>1</maxContacts>
+      <minDepth>0.005</minDepth>
+      <gravity>true</gravity>
+      <surface>
+        <friction>
+          <ode>
+            <slip1>0</slip1>
+            <slip2>0</slip2>
+          </ode>
+          <torsional>
+            <coefficient>1.0</coefficient>
+            <surface_radius>0.5</surface_radius>
+            <use_patch_radius>false</use_patch_radius>
+          </torsional>
+        </friction>
+      </surface>
+    </gazebo>
+  </xacro:macro>
+
+  <!--Interial macros-->
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0" iyy="${m*(3*r*r+h*h)/12}" iyz = "0" izz="${m*r*r/2}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="box_inertia" params="m w h d">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m / 12.0 * (d*d + h*h)}" ixy="0.0" ixz="0.0" iyy="${m / 12.0 * (w*w + h*h)}" iyz="0.0" izz="${m / 12.0 * (w*w + d*d)}"/>
+    </inertial>
+  </xacro:macro>
+
+
+  <xacro:macro name="camera_link" params="parent">
+
+
+    <link name="camera_link">
+      <origin xyz="${0} ${0} ${camera_z}" rpy="0 0 0" />
+      <collision>
+        <geometry>
+          <box size="${sensor_size} ${sensor_size} ${sensor_size}" />
+
+        </geometry>
+      </collision>
+
+      <visual>
+        <geometry>
+          <box size="${sensor_size} ${sensor_size} ${sensor_size}" />
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+
+
+      <xacro:box_inertia m="0.001" w="${sensor_size}" h="${sensor_size}" d="${sensor_size}"/>
+
+    </link>
+
+
+
+    <joint name="camera_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="camera_link"/>
+      <origin xyz="${0} ${0} ${camera_z}" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+    </joint>
+
+
+
+
+    <gazebo reference="camera_link">
+      <sensor type="camera" name="camera_camera_sensor">
+        <update_rate>30.0</update_rate>
+        <camera>
+          <pose>0.035 0 0.078 0 0 0</pose>
+          <horizontal_fov>${85 * M_PI/180.0}</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>1020</width>
+            <height>1020</height>
+          </image>
+          <clip>
+            <near>0.01</near>
+            <far>100</far>
+          </clip>
+        </camera>
+
+        <plugin name="camera_camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>robot_sensor/camera</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>camera_link</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <xacro:macro name="sonar_link_gen" params="parent link_name link_x link_y link_z link_r link_p link_yaw">
+
+
+    <link name="${link_name}">
+      <origin xyz="${link_x} ${link_y} ${link_z}" rpy="${link_r} ${link_p} ${link_yaw}" />
+      <collision>
+        <geometry>
+          <box size="${sensor_size} ${sensor_size} ${sensor_size}" />
+
+        </geometry>
+      </collision>
+
+      <visual>
+        <geometry>
+          <box size="${sensor_size} ${sensor_size} ${sensor_size}" />
+        </geometry>
+        <material name="grey">
+          <color rgba="0.2 0.2 0.2 1.0"/>
+        </material>
+      </visual>
+
+
+      <xacro:box_inertia m="0.001" w="${sensor_size}" h="${sensor_size}" d="${sensor_size}"/>
+
+    </link>
+
+
+    <joint name="${link_name}_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${link_name}"/>
+      <origin rpy="${link_r} ${link_p} ${link_yaw}" xyz="${link_x} ${link_y} ${link_z}"/>
+      <axis xyz="1 0 0" />
+    </joint>
+
+
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="sonar_${link_name}">
+        <pose>0.25 0 0 0 0 0</pose>
+        <update_rate>5</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>5</samples>
+              <resolution>1.0</resolution>
+              <min_angle>${-M_PI/12}</min_angle>
+              <max_angle>${+M_PI/12}</max_angle>
+            </horizontal>
+            <!-- 	      <vertical>
+		<samples>5</samples>
+		<resolution>1</resolution>
+		<min_angle>-0.1</min_angle>
+		<max_angle>0.1</max_angle>
+	      </vertical> -->
+          </scan>
+          <range>
+            <min>0.02</min>
+            <max>1.5</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+          <gaussianNoise>0.005</gaussianNoise>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>5</updateRate>
+          <topicName>sonar_${link_name}</topicName>
+          <frameName>${link_name}</frameName>
+          <fov>0.5</fov>
+          <radiation>ultrasound</radiation>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+  <link name="dummy">
+  </link>
+
+
+  <link name="base_link">
+    <inertial>
+      <mass value="0.03"/>
+      <origin xyz="0 0 ${base_z}" rpy="0 0 3.14"/>
+      <inertia ixx="0.0738" ixy="0" ixz="0" iyy="0.0738" iyz="-0.000000" izz="0.1304"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 ${base_z}" rpy="0 0 3.14"/>
+      <geometry>
+        <mesh filename="two_plate_s.dae" />
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision >
+      <origin xyz="0 0 ${base_z}" rpy="0 0 3.14"/>
+      <geometry>
+        <mesh filename="two_plate_s.dae" />
+      </geometry>
+    </collision>
+
+  </link>
+  <joint name="dummy_joint" type="fixed">
+    <parent link="dummy"/>
+    <child link="base_link"/>
+  </joint>
+
+  <xacro:camera_link parent="base_link" />
+
+
+
+  <xacro:sonar_link_gen parent="base_link" link_name="sonar_link_1" link_x="${(left2_wheel_x + left_wheel_x)/1.45}" link_y="${(left2_wheel_y + left_wheel_y)/1.45}" link_z="${right_wheel_z}" link_r="0" link_p="0" link_yaw="${(M_PI)}" />
+
+  <xacro:sonar_link_gen parent="base_link" link_name="sonar_link_2" link_x="${(right_wheel_x + left_wheel_x)/1.45}" link_y="${(right_wheel_y + left_wheel_y)/1.45}" link_z="${right_wheel_z}" link_r="0" link_p="0" link_yaw="${-(M_PI/3)}" />
+
+  <xacro:sonar_link_gen parent="base_link" link_name="sonar_link_3" link_x="${(right_wheel_x + left2_wheel_x)/1.45}" link_y="${(right_wheel_y + left2_wheel_y)/1.4}" link_z="${right_wheel_z}" link_r="0" link_p="0" link_yaw="${(M_PI/3)}" />
+
+
+
+  <link name="link_right_wheel">
+    <mass value="${right_wheel_mass}"/>
+    <origin rpy="0 ${M_PI/2} 0" xyz="${right_wheel_x} ${right_wheel_y} ${right_wheel_z}"/>
+    <collision name="link_right_wheel_collision">
+      <geometry>
+        <cylinder length="${right_wheel_length}" radius="${right_wheel_radius}" />
+      </geometry>
+    </collision>
+    <visual name="link_right_wheel_visual">
+      <geometry>
+        <cylinder length="${right_wheel_length}" radius="${right_wheel_radius}" />
+      </geometry>
+    </visual>
+    <xacro:cylinder_inertia m="${right_wheel_mass}" r="${right_wheel_radius}" h="${right_wheel_length}"/>
+  </link>
+
+  <xacro:surface_gen main_link_name="link_right_wheel"/>
+
+
+  <joint name="joint_right_wheel" type="continuous">
+    <origin rpy="0 ${M_PI/2} 0" xyz="${right_wheel_x} 0 ${right_wheel_z}"/>
+    <child link="link_right_wheel"/>
+    <parent link="base_link"/>
+    <axis rpy="0 0 0" xyz="0 0 1"/>
+  </joint>
+
+  <!-- Rear wheels transmission -->
+  <transmission name="transmission_right_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_right_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_right_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+
+  <link name="link_left_wheel">
+    <mass value="${left_wheel_mass}"/>
+    <origin rpy="0 ${M_PI/2} ${M_PI/3}" xyz="${left_wheel_x} ${left_wheel_y} ${left_wheel_z}"/>
+    <collision name="link_left_wheel_collision">
+      <geometry>
+        <cylinder length="${left_wheel_length}" radius="${left_wheel_radius}" />
+      </geometry>
+    </collision>
+    <visual name="link_left_wheel_visual">
+      <geometry>
+        <cylinder length="${left_wheel_length}" radius="${left_wheel_radius}" />
+      </geometry>
+    </visual>
+    <xacro:cylinder_inertia m="${right_wheel_mass}" r="${right_wheel_radius}" h="${right_wheel_length}"/>
+  </link>
+
+  <xacro:surface_gen main_link_name="link_left_wheel"/>
+
+
+  <joint name="joint_left_wheel" type="continuous">
+    <origin rpy="0 ${M_PI/2} ${M_PI/3}" xyz="${left_wheel_x} ${left_wheel_y} ${left_wheel_z}"/>
+    <child link="link_left_wheel"/>
+    <parent link="base_link"/>
+    <axis rpy="0 0 0" xyz="0 0 1"/>
+  </joint>
+
+
+  <!-- Rear wheels transmission -->
+  <transmission name="transmission_left_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_left_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_left_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+
+  <link name="link_left2_wheel">
+    <mass value="${left2_wheel_mass}"/>
+    <origin rpy="0 ${M_PI/2} ${M_PI*2/3}" xyz="${left2_wheel_x} ${left2_wheel_y} ${left2_wheel_z}"/>
+    <collision name="link_left2_wheel_collision">
+      <geometry>
+        <cylinder length="${left2_wheel_length}" radius="${left2_wheel_radius}" />
+      </geometry>
+    </collision>
+    <visual name="link_left2_wheel_visual">
+      <geometry>
+        <cylinder length="${left2_wheel_length}" radius="${left2_wheel_radius}" />
+      </geometry>
+    </visual>
+    <xacro:cylinder_inertia m="${right_wheel_mass}" r="${right_wheel_radius}" h="${right_wheel_length}"/>
+  </link>
+
+  <xacro:surface_gen main_link_name="link_left2_wheel"/>
+
+  <joint name="joint_left2_wheel" type="continuous">
+    <origin rpy="0 ${M_PI/2} ${M_PI*2/3}" xyz="${left2_wheel_x} ${left2_wheel_y} ${left2_wheel_z}"/>
+    <child link="link_left2_wheel"/>
+    <parent link="base_link"/>
+    <axis rpy="0 0 0" xyz="0 0 1"/>
+  </joint>
+
+  <!-- Rear wheels transmission -->
+  <transmission name="transmission_left2_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_left2_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_left2_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+</robot>
+
