@@ -15,3 +15,39 @@ You can see the behavior of simple Bug Algorithms here:
 <p align="center">
   <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug-algorithms.jpg" height="200">	
 </p>
+
+## Implementation
+We have implemented the three main bug algorithms in Python. Additionally, we simulated these algorithms on 3-wheel omnidirectional robot using [Webots](https://cyberbotics.com).
+
+If your are just interested in controllers, there are three distinct Python files which bug algorithms have been coded there. The conrollers are in : `SBU_omni_robot/controllers/final_controller/`.
+
+| Algorithm | Controller |
+|--|--|
+| *Bug 0* | [`BUG0_controller.py`](https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/SBU_omni_robot/controllers/final_controller/BUG0_controller.py) |
+| *Bug 1* | [`BUG1_controller.py`](https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/SBU_omni_robot/controllers/final_controller/BUG1_controller.py) |
+| *Bug 2* | [`BUG2_controller.py`](https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/SBU_omni_robot/controllers/final_controller/BUG2_controller.py) |
+
+
+## Simulation
+The simulation results in Webots are as follows. Also you can watch the full videos of the simulations here: [Simulation Videos](https://drive.google.com/drive/folders/13nMh-HdsPXXpsJykysohrLSxVexHf-t3?usp=sharing)
+
+## How to run
+For simulation, you need to install [Webots](https://cyberbotics.com) software on your system. After installing Webots:
+```
+1. clone the repository
+2. open /SBU_omni_robot project in Webots
+3. Run and Happy Simulation!
+``` 
+
+## State diagrams
+For better intuition, we also plot the state diagram of these three main bug algorithms:
+<p align="center">
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug0_state_diagram.jpg" height="500">	
+</p>
+<p align="center">
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug1_state_diagram.jpg" height="500">	
+</p>
+<p align="center">
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug2_state_diagram.jpg" height="500">	
+</p>
+
