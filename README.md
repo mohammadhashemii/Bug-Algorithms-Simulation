@@ -35,7 +35,9 @@ The simulation results in Webots are as follows. Also you can watch the full vid
 </p>
 
 ### Bug 0 snapshots:
-
+<p align="center">
+  <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug0_simulation.jpg" width="1000">	
+</p>
 
 ## How to run
 For simulation, you need to install [Webots](https://cyberbotics.com) software on your system. After installing Webots:
