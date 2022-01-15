@@ -1,6 +1,6 @@
 # Bug-Algorithms-Simulation
 
-This is the final project of the *Fundamental of Robotic* course at Shahid Beheshti University.
+This is the course final project of the *Fundamental of Robotics - Fall 2021* course at Shahid Beheshti University. This repository contains the Python implementation of Bug algorithms and simulation with 3-wheel omnidirectional robot in Webots simulation software.
 
 ## Introduction to Bug algorithms
 The Bug algorithm is perhaps the simplest obstacle-avoidance algorithm one could imagine. The basic idea is to follow the contour of each obstacle in the robot’s way and thus circumnavigate it. A number of variations and extensions of the Bug algorithm exist, otherwise we have implemented the three main ones in Python.
@@ -34,16 +34,19 @@ The simulation results in Webots are as follows. Also you can watch the full vid
   <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/map.jpg" height="500">	
 </p>
 
+---
 ### Bug 0 snapshots:
 <p align="center">
   <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug0_simulation.jpg" width="1000">	
 </p>
 
+---
 ### Bug 1 snapshots:
 <p align="center">
   <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug1_simulation.jpg" width="1000">	
 </p>
 
+---
 ### Bug 2 snapshots:
 <p align="center">
   <img src="https://github.com/mohammadhashemii/Bug-Algorithms-Simulation/blob/main/images/bug2_simulation.jpg" width="1000">	
